@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudNova — Tu ruta de aprendizaje, a tu medida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="landing.css">
+</head>
+<body>
+
+<header>
+  
+  <nav class="wrap">
+    <div class="logo">
+      <div class="logo" id="logo"></div> 
+      <img src="/login/image.png" alt="logo Stud nova" class="logo-img">
+      StudNova
+    </div>
+    <button type="button" class="hamburger" id="hamburgerBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="navCollapsible">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-collapsible" id="navCollapsible">
+      <div class="nav-links">
+        <a href="#problema">El problema</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#equipo">Equipo</a>
+      </div>
+      <div class="nav-cta" id="navCtaLoggedOut">
+        <button type="button" class="theme-toggle" id="themeToggle" title="Cambiar modo">🌙</button>
+        <a href="/login/login.html"> Iniciar sesión </a>
+      </div>
+      <div class="nav-cta" id="navCtaLoggedIn" hidden>
+        <button type="button" class="theme-toggle" title="Cambiar modo">🌙</button>
+        <span class="user-chip">
+          <span class="user-chip-avatar" id="userChipAvatar">?</span>
+          <span class="user-chip-name" id="userChipName">Usuario</span>
+        </span>
+        <button type="button" class="btn btn-primary" id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Aprendizaje autónomo con IA</span>
+      <h1>Tu ruta de estudio, <em>trazada a tu medida.</em></h1>
+      <p class="hero-sub">StudNova convierte cualquier tema que quieras aprender —y el tiempo que tienes para hacerlo— en un plan de estudios estructurado, con actividades, evaluaciones y seguimiento de avance.</p>
+      <div class="hero-actions">
+        <span class="hero-note">Matemáticas · Español · Biología</span>
+      </div>
+    </div>
+
+    <div class="path-card">
+      <div class="path-card-head">
+        <div>
+          <div class="label">Plan generado por IA</div>
+          <div class="tema">Biología — Genética básica</div>
+        </div>
+        <span class="node-tag">Nivel 2 de 4</span>
+      </div>
+      <div class="node-row">
+        <div class="node done">
+          <div class="node-dot">✓</div>
+          <div class="node-text">
+            <div class="node-title">Fundamentos celulares</div>
+            <div class="node-sub">Completado · 3 actividades</div>
+          </div>
+        </div>
+        <div class="node active">
+          <div class="node-dot">02</div>
+          <div class="node-text">
+            <div class="node-title">ADN y herencia genética</div>
+            <div class="node-sub">En curso · video + esquema</div>
+          </div>
+          <span class="node-tag">Hoy</span>
+        </div>
+        <div class="node">
+          <div class="node-dot">03</div>
+          <div class="node-text">
+            <div class="node-title">Leyes de Mendel</div>
+            <div class="node-sub">Bloqueado hasta completar nivel 2</div>
+          </div>
+        </div>
+        <div class="node">
+          <div class="node-dot">04</div>
+          <div class="node-text">
+            <div class="node-title">Evaluación final</div>
+            <div class="node-sub">Mide tu progreso del tema</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-banner" id="dashboardBanner" hidden>
+  <div class="wrap dashboard-inner">
+    <div>
+      <span class="eyebrow">Tu cuenta</span>
+      <h2 id="dashboardGreeting">Hola de nuevo</h2>
+      <p id="dashboardSub" class="dashboard-sub">Este sería el punto de partida hacia tu plan de estudios real.</p>
+    </div>
+    <div class="dashboard-stats">
+      <div class="dashboard-stat">
+        <span class="dashboard-stat-num" id="statPlans">0</span>
+        <span class="dashboard-stat-label">Planes creados</span>
+      </div>
+      <div class="dashboard-stat">
+        <span class="dashboard-stat-num">0</span>
+        <span class="dashboard-stat-label">Niveles completados</span>
+      </div>
+      <div class="dashboard-stat">
+        <span class="dashboard-stat-num">0h</span>
+        <span class="dashboard-stat-label">Tiempo de estudio</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="split" id="problema">
+  <div class="wrap split-grid">
+    <div class="split-left">
+      <span class="eyebrow">El problema</span>
+      <h2>Aprender solo, sin guía, es donde más se abandona.</h2>
+    </div>
+    <div class="split-right">
+    <div class="problem-list">
+      <div class="problem-item">
+        <span class="problem-num">01</span>
+        <div>
+          <h3>Sin estructura clara</h3>
+          <p>No saber por dónde empezar ni cómo ordenar los temas hace que el estudio se sienta caótico desde el primer día.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">02</span>
+        <div>
+          <h3>Tiempo mal gestionado</h3>
+          <p>El tiempo disponible para estudiar es limitado, y repartirlo entre temas y materias sin un plan termina en sobrecarga o abandono.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">03</span>
+        <div>
+          <h3>Ritmo único, personas distintas</h3>
+          <p>Los cursos tradicionales avanzan al mismo paso para todos, sin adaptarse a quien necesita ir más lento o más rápido.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">04</span>
+        <div>
+          <h3>Errores base sin detectar</h3>
+          <p>Cuando un concepto inicial queda mal entendido, todo el aprendizaje posterior se construye sobre una base débil.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <span class="problem-num">05</span>
+        <div>
+          <h3>Acceso desigual</h3>
+          <p>No todas las personas pueden pagar cursos premium o tutores particulares para acompañar su proceso.</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow" id="como-funciona">
+  <div class="wrap">
+    <span class="eyebrow">Cómo funciona</span>
+    <h2>Le dices a StudNova qué quieres aprender y cuánto tiempo tienes. El resto lo organiza la IA.</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <span class="fnum">Paso 1</span>
+        <h3>Cuéntale tu meta</h3>
+        <p>Eliges el tema o materia que quieres dominar y el tiempo del que dispones para aprenderlo.</p>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">Paso 2</span>
+        <h3>Recibe tu ruta</h3>
+        <p>La IA organiza los contenidos desde lo más básico hasta lo más avanzado, apoyada en fuentes confiables.</p>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">Paso 3</span>
+        <h3>Estudia y practica</h3>
+        <p>Avanzas con videos, esquemas, audios y ejercicios prácticos pensados para tu estilo de aprendizaje.</p>
+      </div>
+      <div class="flow-step">
+        <span class="fnum">Paso 4</span>
+        <h3>El plan se adapta</h3>
+        <p>Según tu rendimiento, StudNova reorganiza el plan, refuerza temas o propone nuevos retos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="modules" id="modulos">
+  <div class="wrap">
+    <div class="modules-head">
+      <div>
+        <span class="eyebrow">Qué incluye</span>
+        <h2>Un sistema modular, pensado para acompañar todo el proceso.</h2>
+      </div>
+      <p>Cada módulo resuelve una parte distinta del aprendizaje autónomo, desde tu cuenta hasta tu energía para estudiar.</p>
+    </div>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-icon">🔐</div>
+        <h3>Gestión de usuarios</h3>
+        <p>Registro, inicio de sesión y edición de perfil, con tu información protegida mediante cifrado.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">📚</div>
+        <h3>Plan de estudios</h3>
+        <p>Crea y administra tus planes, agrega o elimina asignaturas y visualiza todas tus materias en un solo lugar.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">🗓️</div>
+        <h3>Horarios</h3>
+        <p>Registra el horario de cada asignatura y consulta tu semana completa de un vistazo.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">🤖</div>
+        <h3>Inteligencia artificial</h3>
+        <p>Genera tu plan organizado por dificultad y una ruta de estudio estructurada por niveles.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">💬</div>
+        <h3>Asistente virtual</h3>
+        <p>Resuelve dudas escribiéndole directamente a la IA durante tu proceso de estudio.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">⏱️</div>
+        <h3>Control de fatiga</h3>
+        <p>Un temporizador que te avisa cuándo descansar, para que rindas mejor en cada sesión.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="styles-section">
+  <div class="wrap styles-grid">
+    <div>
+      <span class="eyebrow">Diseñado para cómo aprendes</span>
+      <h2>El mismo tema, explicado en tu idioma de aprendizaje.</h2>
+      <p>StudNova prioriza los dos estilos de aprendizaje más comunes, combinando recursos para que el contenido se entienda mejor, no solo se entregue.</p>
+    </div>
+    <div class="style-cards">
+      <div class="style-card">
+        <span class="style-badge v">Visual</span>
+        <div>
+          <h4>Esquemas, infografías y video</h4>
+          <p>Explicaciones guiadas que muestran la estructura de un tema antes de profundizar en el detalle.</p>
+        </div>
+      </div>
+      <div class="style-card">
+        <span class="style-badge v">Práctica</span>
+        <div>
+          <h4>Actividades</h4>
+          <p>Recomendaqcion de ejercicios al final de cada nivel para medir tu progreso real, no solo tu avance en el temario.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="team" id="equipo">
+  <div class="wrap">
+    <span class="eyebrow">El equipo</span>
+    <h2>Cinco personas, un proyecto formativo.</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar" style="background:var(--blackboard);">AP</div>
+        <h3>Adrián Felipe Palacios Martínez</h3>
+        <div class="role">FullStack</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:var(--coral);">BM</div>
+        <h3>Breiner Stanly Muñoz Martínez</h3>
+        <div class="role">FullStack</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:var(--sage);">MR</div>
+        <h3>Maira Daniela Ramírez Anzola</h3>
+        <div class="role">FullStack</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:var(--blackboard-deep);">NT</div>
+        <h3>Nicol Hasblady Triana Rodríguez</h3>
+        <div class="role">FullStack</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" style="background:var(--coral-soft);">LT</div>
+        <h3>Laura Isabella Tavera Contreras</h3>
+        <div class="role">FullStack</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="cta">
+  <div class="wrap">
+    <span class="eyebrow" style="justify-content:center;">Empieza hoy</span>
+    <h2>Deja de improvisar tu estudio. <em>Empieza con un plan.</em></h2>
+    <p>Dinos qué quieres aprender y cuánto tiempo tienes. StudNova organiza el resto.</p>
+    <div class="cta-actions">
+      <a href="#modulos" class="btn-ghost" style="display:flex;align-items:center;">Ver todos los módulos →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <nav class="wrap">
+    <div class="logo">
+      <div class="logo" id="logo"></div> 
+      <img src="../image.png" alt="logo Stud nova" class="logo-img">
+      StudNova
+    </div>
+    <div class="footer-links">
+      <a href="#problema">El problema</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#equipo">Equipo</a>
+    </div>
+    <div class="footer-note">Proyecto formativo · Análisis y Desarrollo de Software</div>
+  </div>
+</footer>
+
+<!-- ===== MODAL: OVERLAY COMPARTIDO ===== -->
+<div class="modal-overlay" id="modalOverlay">
+
+  <!-- ----- Modal: Iniciar sesión ----- -->
+  <div class="modal-card" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">✕</button>
+    <span class="eyebrow">Bienvenido de nuevo</span>
+    <h2 class="modal-title" id="loginTitle">Inicia sesión</h2>
+    <p class="modal-sub">Entra para seguir con tu ruta de aprendizaje.</p>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="loginEmail">Correo electrónico</label>
+        <input type="email" id="loginEmail" name="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+        <span class="field-error" id="loginEmailError"></span>
+      </div>
+      <div class="field">
+        <label for="loginPassword">Contraseña</label>
+        <div class="password-wrap">
+          <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="••••••••">
+          <button type="button" class="toggle-pass" data-toggle-pass="loginPassword" aria-label="Mostrar contraseña">Ver</button>
+        </div>
+        <span class="field-error" id="loginPasswordError"></span>
+      </div>
+
+      <div class="form-banner" id="loginFormBanner" hidden></div>
+
+      <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+    </form>
+
+    <p class="modal-switch">¿No tienes cuenta? <button type="button" class="link-btn" data-open-modal="signup">Crear una cuenta</button></p>
+  </div>
+
+  <!-- ----- Modal: Crear cuenta ----- -->
+  <div class="modal-card" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupTitle" hidden>
+    <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">✕</button>
+    <span class="eyebrow">Empieza hoy</span>
+    <h2 class="modal-title" id="signupTitle">Crea tu cuenta</h2>
+    <p class="modal-sub">Tu primer paso hacia un plan de estudios hecho a tu medida.</p>
+
+    <form id="signupForm" novalidate>
+      <div class="field">
+        <label for="signupName">Nombre completo</label>
+        <input type="text" id="signupName" name="name" autocomplete="name" placeholder="Tu nombre">
+        <span class="field-error" id="signupNameError"></span>
+      </div>
+      <div class="field">
+        <label for="signupEmail">Correo electrónico</label>
+        <input type="email" id="signupEmail" name="email" autocomplete="email" placeholder="tucorreo@ejemplo.com">
+        <span class="field-error" id="signupEmailError"></span>
+      </div>
+      <div class="field">
+        <label for="signupPassword">Contraseña</label>
+        <div class="password-wrap">
+          <input type="password" id="signupPassword" name="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+          <button type="button" class="toggle-pass" data-toggle-pass="signupPassword" aria-label="Mostrar contraseña">Ver</button>
+        </div>
+        <div class="strength-meter" id="strengthMeter">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="field-error" id="signupPasswordError"></span>
+      </div>
+      <div class="field">
+        <label for="signupPasswordConfirm">Confirmar contraseña</label>
+        <input type="password" id="signupPasswordConfirm" name="passwordConfirm" autocomplete="new-password" placeholder="Repite tu contraseña">
+        <span class="field-error" id="signupPasswordConfirmError"></span>
+      </div>
+
+      <div class="form-banner" id="signupFormBanner" hidden></div>
+
+      <button type="submit" class="btn btn-primary btn-block">Crear mi cuenta</button>
+    </form>
+
+    <p class="modal-switch">¿Ya tienes cuenta? <button type="button" class="link-btn" data-open-modal="login">Inicia sesión</button></p>
+  </div>
+
+</div>
+
+<!-- ===== TOASTS ===== -->
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<script src="auth.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const sesion = StudNovaSession.get();
+
+    const navLoggedOut = document.getElementById("navCtaLoggedOut");
+    const navLoggedIn = document.getElementById("navCtaLoggedIn");
+
+    const userChipName = document.getElementById("userChipName");
+    const userChipAvatar = document.getElementById("userChipAvatar");
+
+    if (sesion) {
+
+        // Ocultar "Iniciar sesión"
+        navLoggedOut.hidden = true;
+
+        // Mostrar información del usuario
+        navLoggedIn.hidden = false;
+
+        // Mostrar nombre
+        userChipName.textContent = sesion.nombre;
+
+        // Mostrar primera letra
+        userChipAvatar.textContent =
+            sesion.nombre.charAt(0).toUpperCase();
+
+    } else {
+
+        // No hay sesión
+        navLoggedOut.hidden = false;
+        navLoggedIn.hidden = true;
+    }
+
+});
+</script>
+
+</body>
+</html>
+</body>
+</html>

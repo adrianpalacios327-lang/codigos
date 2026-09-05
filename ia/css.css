@@ -1,0 +1,168 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#16446A;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.contenedor{
+    width:1000px;
+    height:90vh;
+    background:#1e293b;
+    border-radius:20px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0px 0px 25px rgba(0,0,0,.4);
+    
+}
+
+.header{
+    background:#18345A;
+    color:white;
+    padding:20px;
+    text-align:center;
+    position: relative;
+    
+}
+
+.header h1{
+    font-size:30px;
+}
+
+.header p{
+    margin-top:5px;
+    opacity:.8;
+}
+
+.chat{
+    flex:1;
+    padding:25px;
+    overflow-y:auto;
+    background:#0f172a;
+}
+
+.mensaje{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:#1e293b;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
+}
+
+.contenido{
+    background:#1e293b;
+    color:white;
+    padding:15px 20px;
+    border-radius:15px;
+    max-width:75%;
+    line-height:1.6;
+}
+
+.escribir{
+    display:flex;
+    gap:15px;
+    padding:20px;
+    background:#1e293b;
+    border-top:1px solid #334155;
+}
+
+textarea{
+    flex:1;
+    resize:none;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    padding:15px;
+    font-size:16px;
+    background:#334155;
+    color:white;
+}
+
+textarea::placeholder{
+    color:#cbd5e1;
+}
+
+button{
+    width:130px;
+    border:none;
+    border-radius:12px;
+    background:#18345A;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#475569;
+    border-radius:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#0f172a;
+}
+
+.header{
+    background:#18345A;
+    color:white;
+    padding:20px;
+    text-align:center;
+    position: relative; /* <-- ESTO ES LO IMPORTANTE */
+}
+
+.cerrar-sesion{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+
+    width: auto; /* ya no 40px porque "Cerrar Sesion" no cabe en 40px */
+    height: 35px;
+    padding: 0 14px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: white;
+    color: #18345A;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.cerrar-sesion:hover{
+    background: #ff4444;
+    color: white;
+}

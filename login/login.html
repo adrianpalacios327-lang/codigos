@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudNova — Iniciar sesión</title>
+    <link rel="stylesheet" href="login.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container active" id="login">
+            <img src="image.png" alt="Logo StudNova" width="50" height="50" class="logo">
+            <br>
+            <h2>StudNova</h2>
+            <p id="loginMensaje" class="form-mensaje"></p>
+            <form id="formLogin">
+                <input type="email" id="loginCorreo" placeholder="Correo electrónico" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required maxlength="10">
+                <button type="submit">Entrar</button>
+                <button type="button" id="btnGoogle" class="google-btn">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20">
+                    Continuar con Google
+                </button>
+            </form>
+            <div class="links">
+                <a href="#" onclick="mostrarFormulario('register'); return false;">Registrarme</a>
+            </div>
+        </div>
+
+        <div class="form-container" id="register">
+            <h2>Registrarme</h2>
+            <p id="registerMensaje" class="form-mensaje error" hidden></p>
+            <form id="formRegister">
+                <input type="text" id="registerNombre" placeholder="Nombre completo" required>
+                <input type="email" id="registerCorreo" placeholder="Correo electrónico" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña (máx. 10)" required maxlength="10">
+                <button type="submit">Crear cuenta</button>
+            </form>
+            <div class="links">
+                <a href="#" onclick="mostrarFormulario('login'); return false;">Ya tengo cuenta</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+
+    <script>
+      
+  const GOOGLE_CLIENT_ID = "625376533141-3vug0hb9n3u6kqqk7gmi7g7cf1nfo6ql.apps.googleusercontent.com";
+
+  let tokenClient;
+
+  function handleGoogleResponse(user) {
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("userEmail", user.email);
+    localStorage.setItem("userName", user.name);
+    localStorage.setItem("userPhoto", user.picture);
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("loginMethod", "google");
+    document.getElementById("loginMensaje").textContent = "¡Bienvenido " + user.name + "!";
+    document.getElementById("loginMensaje").style.color = "lightgreen";
+    setTimeout(() => {
+        window.location.href = "/ia/interfaz.html";
+    }, 800);
+  }
+
+  window.onload = () => {
+    // Inicializa el cliente que abre POPUP siempre
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: "email profile openid",
+      callback: async (tokenResponse) => {
+        // Con el token pedimos los datos del usuario
+        const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+        });
+        const user = await res.json();
+        handleGoogleResponse(user);
+      },
+    });
+
+    document.getElementById("btnGoogle").addEventListener("click", () => {
+      tokenClient.requestAccessToken(); // Esto SI abre el coso de Google
+    });
+  };
+</script>
+</body>
+</html>
