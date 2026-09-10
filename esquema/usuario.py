@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -16,7 +17,7 @@ class UsuarioRespuesta(BaseModel):
     id_usuario: int
     nombre: str
     correo: str
-    rol: str
+    rol: Optional[str] = "estudiante"    
 
     class Config:
         from_attributes = True

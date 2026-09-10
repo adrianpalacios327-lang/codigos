@@ -8,9 +8,31 @@
 </head>
 <body>
 
+    <!-- Overlay para cerrar el menú al hacer clic afuera -->
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <!-- Menú Lateral Izquierdo (Historial) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Historial de Planes</h2>
+            <button class="close-btn" id="closeBtn" onclick="toggleMenu()">&times;</button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="history-list" id="history-list">
+                <!-- Los planes guardados se cargarán aquí dinámicamente desde la BD -->
+            </ul>
+        </div>
+    </aside>
+
     <div class="contenedor">
         <div class="header">
-           <button type="button" class="cerrar-sesion" onclick="cerrarSesion()">Cerrar Sesion</button>
+            <!-- Botón Menú Hamburguesa en la zona izquierda -->
+            <button class="hamburger-btn" id="menuToggle" onclick="toggleMenu()" aria-label="Abrir historial">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <button type="button" class="cerrar-sesion" onclick="cerrarSesion()">Cerrar Sesion</button>
             <h1>StudNova IA</h1>
             <p>Tu asistente inteligente para generar planes de estudio interactivos</p>
         </div>
@@ -42,7 +64,19 @@
         const chatBox = document.getElementById('chat-box');
         const promptInput = document.getElementById('prompt-input');
         const btnEnviar = document.getElementById('btn-enviar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const historyList = document.getElementById('history-list');
+
         let historialConversacion = [];
+
+        // Cargar historial desde la base de datos al iniciar la aplicación
+        document.addEventListener('DOMContentLoaded', cargarHistorialPlanes);
+
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
 
         function manejarEnter(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -54,27 +88,64 @@
         async function enviarMensaje() {
             const texto = promptInput.value.trim();
             if (!texto) return;
+
+            // 1. Obtener usuario de la sesión o asignar 1 por defecto (para pruebas)
+            let idUsuario = 1;
+            try {
+                const usuarioStr = localStorage.getItem("usuario") || sessionStorage.getItem("usuario");
+                if (usuarioStr) {
+                    const u = JSON.parse(usuarioStr);
+                    idUsuario = u.id_usuario || u.id || 1;
+                }
+            } catch (e) {
+                idUsuario = 1;
+            }
+
             agregarMensajeUsuario(texto);
             historialConversacion.push({ rol: "usuario", texto: texto });
+            
             promptInput.value = '';
             btnEnviar.disabled = true;
             btnEnviar.style.opacity = '0.5';
+
             const idCarga = agregarMensajeCarga();
             scrollAlFondo();
+
             try {
-                const respuesta = await fetch('/api/ia/generar', {
+                // 2. Apuntar directamente al backend FastAPI y enviar los campos requeridos
+                const respuesta = await fetch("http://127.0.0.1:8000/prompt-ia/chat", {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: texto, historial: historialConversacion })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        mensaje: texto, 
+                        id_usuario: Number(idUsuario),
+                        id_plan: null 
+                    })
                 });
+
                 let datos;
                 const textoRespuesta = await respuesta.text();
-                try { datos = JSON.parse(textoRespuesta); } catch { throw new Error(textoRespuesta || 'Error en la respuesta del servidor'); }
+
+                try { 
+                    datos = JSON.parse(textoRespuesta); 
+                } catch { 
+                    throw new Error(textoRespuesta || 'Error en la respuesta del servidor'); 
+                }
+
                 if (!respuesta.ok) throw new Error(datos.detail || 'Ocurrió un error al procesar');
-                const textoIA = datos.mensaje || "He procesado tu respuesta.";
+
+                // 3. Extraer 'respuesta' (lo que retorna el router en Python)
+                const textoIA = datos.respuesta || datos.mensaje || "He procesado tu respuesta.";
                 historialConversacion.push({ rol: "ia", texto: textoIA });
+
                 removerElemento(idCarga);
-                agregarMensajeIA(datos);
+                
+                // Mantener las estructuras exactas de tu frontend
+                agregarMensajeIA({ ...datos, mensaje: textoIA });
+
             } catch (error) {
                 removerElemento(idCarga);
                 agregarMensajeError(error.message);
@@ -93,6 +164,7 @@
             div.innerHTML = `<div class="avatar" style="background:#1e293b">👩🏻‍💻</div><div class="contenido" style="background:#1e293b"><p>${escaparHTML(texto)}</p></div>`;
             chatBox.appendChild(div);
         }
+
         function agregarMensajeCarga() {
             const id = 'carga-' + Date.now();
             const div = document.createElement('div');
@@ -102,30 +174,97 @@
             chatBox.appendChild(div);
             return id;
         }
+
         function agregarMensajeIA(datos) {
             const div = document.createElement('div');
             div.className = 'mensaje';
             const tienePlan = (datos.tipo === "plan_generado") || (datos.plan && datos.plan.modulos && datos.plan.modulos.length > 0) || (datos.modulos && datos.modulos.length > 0);
+            
             if (!tienePlan) {
                 const mensajeTexto = datos.mensaje || (typeof datos === 'string' ? datos : "Cuéntame más sobre lo que quieres aprender.");
                 div.innerHTML = `<div class="avatar">🤖</div><div class="contenido"><p>${escaparHTML(mensajeTexto)}</p></div>`;
             } else {
                 const planObjeto = datos.plan || datos;
+                
+                // Guardar como plan actual e inmediatamente refrescar el historial desde la BD
                 localStorage.setItem("plan_estudio_actual", JSON.stringify(planObjeto));
+                cargarHistorialPlanes();
+
                 const mensajeTexto = datos.mensaje || "✨ ¡Plan de estudio generado con éxito!";
                 div.innerHTML = `<div class="avatar">🤖</div><div class="contenido" style="width: 85%;"><p><strong>${escaparHTML(mensajeTexto)}</strong></p><p style="margin-top: 5px; font-size: 14px; opacity: 0.9;">He estructurado tu ruta de aprendizaje a tu medida con quizzes y control de fatiga.</p><div style="margin: 12px 0;"><a href="/principal/interfaz plan de estudio/visor_plan.html" target="_blank" style="display:inline-block; padding: 8px 16px; background:#2563eb; color:white; text-decoration:none; border-radius:8px; font-weight:bold; font-size:14px;">↗️ Abrir Plan en Pantalla Completa</a></div><div style="border-radius: 10px; overflow: hidden; border: 1px solid #334155; margin-top: 10px;"><iframe src="/principal/interfaz plan de estudio/visor_plan.html" style="width: 100%; height: 500px; border: none; background: #0f172a;"></iframe></div></div>`;
             }
             chatBox.appendChild(div);
         }
+
+        // Cargar los planes guardados en la BD mediante API REST
+        async function cargarHistorialPlanes() {
+            let idUsuario = 1;
+            try {
+                const usuarioStr = localStorage.getItem("usuario") || sessionStorage.getItem("usuario");
+                if (usuarioStr) {
+                    const u = JSON.parse(usuarioStr);
+                    idUsuario = u.id_usuario || u.id || 1;
+                }
+            } catch (e) {
+                idUsuario = 1;
+            }
+
+            historyList.innerHTML = '';
+
+            try {
+                const respuesta = await fetch(`http://127.0.0.1:8000/plan-estudio/usuario/${idUsuario}`);
+                
+                if (!respuesta.ok) {
+                    throw new Error("No se pudieron obtener los planes del usuario.");
+                }
+
+                const planes = await respuesta.json();
+
+                if (!planes || planes.length === 0) {
+                    historyList.innerHTML = '<li class="sin-planes">No hay planes creados aún.</li>';
+                    return;
+                }
+
+                planes.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    
+                    const fechaFormateada = item.fecha_creacion 
+                        ? new Date(item.fecha_creacion).toLocaleDateString() 
+                        : (item.fecha || "Reciente");
+
+                    // Si el plan viene con su propiedad de JSON o directamente la estructura
+                    const contenidoPlan = item.contenido_json ? (typeof item.contenido_json === 'string' ? JSON.parse(item.contenido_json) : item.contenido_json) : item;
+
+                    li.onclick = () => cargarPlanSeleccionado(contenidoPlan);
+                    li.innerHTML = `
+                        <span class="plan-title">${escaparHTML(item.titulo || item.nombre || "Plan de Estudio")}</span>
+                        <span class="plan-date">${fechaFormateada}</span>
+                    `;
+                    historyList.appendChild(li);
+                });
+
+            } catch (error) {
+                console.error("Error al cargar historial desde la BD:", error);
+                historyList.innerHTML = '<li class="sin-planes">No hay planes creados aún.</li>';
+            }
+        }
+
+        function cargarPlanSeleccionado(plan) {
+            localStorage.setItem("plan_estudio_actual", JSON.stringify(plan));
+            window.open('/principal/interfaz plan de estudio/visor_plan.html', '_blank');
+        }
+
         function agregarMensajeError(mensaje) {
             const div = document.createElement('div');
             div.className = 'mensaje';
             div.innerHTML = `<div class="avatar" style="background:#dc2626;">⚠️</div><div class="contenido" style="background:#7f1d1d;"><p><strong>Error:</strong> ${escaparHTML(mensaje)}</p></div>`;
             chatBox.appendChild(div);
         }
+
         function removerElemento(id) { const el = document.getElementById(id); if (el) el.remove(); }
         function scrollAlFondo() { chatBox.scrollTop = chatBox.scrollHeight; }
-        function escaparHTML(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+        function escaparHTML(str) { return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
     </script>
 </body>
 </html>
