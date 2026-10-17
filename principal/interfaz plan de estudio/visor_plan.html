@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudNova - Plan de Estudio</title>
+    <!-- Vincula los estilos CSS desde /ia/css.css -->
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+    <div class="contenedor-plan">
+        
+        <!-- Header del Plan -->
+        <header class="header-plan">
+            <div class="header-info">
+                <a href="/ia/interfaz.html" class="btn-volver" onclick="volverAlChat(event)">← Volver al Chat</a>
+                <span class="badge-ruta" id="badge-materia">Ruta de Aprendizaje</span>
+                <h1 id="titulo-plan">Cargando plan...</h1>
+                <p id="descripcion-plan">Estructurando actividades...</p>
+            </div>
+            
+            <!-- Barra de Progreso Global -->
+            <div class="progreso-card">
+                <div class="progreso-header">
+                    <span>Progreso Total</span>
+                    <strong id="porcentaje-texto">0%</strong>
+                </div>
+                <div class="barra-fondo">
+                    <div class="barra-relleno" id="barra-progreso"></div>
+                </div>
+                <small id="contador-tareas">0 de 0 actividades completadas</small>
+            </div>
+        </header>
+
+        <!-- Widget de Control de Fatiga / Descanso -->
+        <section class="widget-fatiga">
+            <div class="fatiga-info">
+                <div class="icono-reloj">⏱️</div>
+                <div>
+                    <strong>Control de Fatiga y Pausa Activa</strong>
+                    <p id="estado-fatiga">Estudia 25 min y descansa 5 min para mantener tu enfoque.</p>
+                </div>
+            </div>
+            <div class="fatiga-timer">
+                <span id="temporizador">5:00</span>
+                <button id="btn-timer" onclick="alternarTimer()">Iniciar Sesión</button>
+            </div>
+        </section>
+
+        <!-- Contenedor donde java.js insertará los módulos dinámicamente -->
+        <div id="contenedor-modulos" style="display: flex; flex-direction: column; gap: 20px;"></div>
+
+    </div>
+
+    <!-- Script en la misma carpeta -->
+    <script src="java.js"></script>
+</body>
+</html>

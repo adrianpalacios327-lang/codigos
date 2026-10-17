@@ -1,0 +1,274 @@
+/* ============================================================
+   StudNova — login.css
+   Estilo inspirado en apple.com (tipografía del sistema, bordes
+   muy redondeados, campos rellenos, botones píldora) conservando
+   la colorimetría original: azul marino → turquesa.
+
+   No necesita cambios en login.html ni en login.js.
+   ============================================================ */
+
+:root{
+    --bg-dark: #0A082D;
+    --primary: #16446A;
+    --secondary: #72AFC1;
+    --accent: #2C6A94;
+    --card: rgba(18, 40, 72, 0.78);
+    --input: #18345A;
+    --border: rgba(114,175,193,.25);
+    --text: #F4F8FC;
+    --text2: #9CB7D1;
+    --shadow: rgba(0,0,0,.45);
+
+    --coral-soft: #A9D6E0;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+            "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+[hidden]{ display:none !important; }
+
+html{ color-scheme:dark; }
+
+body{
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:24px 16px;
+    font-family:var(--font);
+    font-size:17px;
+    line-height:1.47;
+    letter-spacing:-0.011em;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    background:linear-gradient(
+        135deg,
+        var(--bg-dark),
+        var(--primary),
+        var(--accent),
+        var(--secondary)
+    );
+    background-attachment:fixed;
+}
+
+::selection{ background:var(--coral-soft); color:var(--bg-dark); }
+
+button, input{
+    font-family:inherit;
+    letter-spacing:inherit;
+}
+
+/* ================= CONTENEDOR ================= */
+@keyframes rise{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:none; }
+}
+
+.container{
+    width:100%;
+    max-width:440px;
+    min-height:600px;
+    position:relative;
+    animation:rise .8s cubic-bezier(.2,.7,.2,1) both;
+}
+
+/* ================= TARJETAS (login / registro) ================= */
+.form-container{
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    background:var(--card);
+    -webkit-backdrop-filter:blur(24px) saturate(160%);
+    backdrop-filter:blur(24px) saturate(160%);
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:40px 36px 32px;
+    color:var(--text);
+    box-shadow:0 30px 70px -30px var(--shadow);
+
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(40px);
+    pointer-events:none;
+    transition:opacity .5s cubic-bezier(.2,.7,.2,1),
+               transform .5s cubic-bezier(.2,.7,.2,1),
+               visibility 0s linear .5s;
+}
+
+.form-container.active{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+    pointer-events:auto;
+    transition-delay:0s;
+}
+
+/* Logo */
+.logo{
+    display:block;
+    margin:0 auto 14px;
+    border-radius:14px;
+}
+.form-container br{ display:none; }
+
+h2{
+    text-align:center;
+    margin-bottom:26px;
+    font-size:34px;
+    font-weight:700;
+    line-height:1.1;
+    letter-spacing:-0.03em;
+    color:var(--text);
+}
+
+/* ================= MENSAJES ================= */
+.form-mensaje{
+    text-align:center;
+    margin-bottom:18px;
+    padding:10px 14px;
+    border-radius:14px;
+    background:rgba(244,248,252,0.06);
+    font-size:14px;
+    line-height:1.4;
+}
+.form-mensaje:empty{ display:none; }
+
+.form-mensaje.error{
+    color:#E9938A;
+    background:rgba(233,147,138,0.12);
+}
+
+/* ================= FORMULARIO ================= */
+form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+input{
+    width:100%;
+    padding:16px 18px;
+    border:1px solid transparent;
+    outline:none;
+    border-radius:14px;
+    background:var(--input);
+    color:var(--text);
+    font-size:17px;
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+input::placeholder{
+    color:var(--text2);
+}
+
+input:focus{
+    border-color:var(--secondary);
+    box-shadow:0 0 0 4px rgba(114,175,193,0.22);
+}
+
+/* Autocompletado del navegador: mantiene el fondo oscuro */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+    -webkit-text-fill-color:var(--text);
+    -webkit-box-shadow:0 0 0 100px var(--input) inset;
+    caret-color:var(--text);
+    transition:background-color 9999s ease 0s;
+}
+
+/* ================= BOTONES (píldora) ================= */
+button{
+    padding:15px 22px;
+    border:none;
+    border-radius:980px;
+    font-size:17px;
+    font-weight:600;
+    cursor:pointer;
+    color:var(--bg-dark);
+    background:var(--secondary);
+    transition:background .25s ease, transform .2s ease, box-shadow .25s ease;
+}
+
+button:hover{
+    background:var(--coral-soft);
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+form > button[type="submit"]{
+    margin-top:6px;
+}
+
+button:focus-visible,
+a:focus-visible{
+    outline:2px solid var(--coral-soft);
+    outline-offset:3px;
+}
+
+/* Botón de Google */
+.google-btn{
+    margin-top:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+
+    background:#ffffff;
+    color:#1d1d1f;
+    font-weight:500;
+    border:none;
+}
+
+.google-btn img{
+    width:20px;
+    height:20px;
+}
+
+.google-btn:hover{
+    background:#f2f4f7;
+    color:#000;
+}
+
+/* ================= ENLACES ================= */
+.links{
+    margin-top:22px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    text-align:center;
+}
+
+.links a{
+    color:var(--coral-soft);
+    font-size:15px;
+    text-decoration:none;
+    transition:color .2s ease;
+}
+
+.links a:hover{
+    color:var(--text);
+    text-decoration:underline;
+    text-underline-offset:4px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:480px){
+    body{ padding:16px 12px; }
+    .container{ min-height:580px; }
+    .form-container{ padding:32px 22px 26px; border-radius:24px; }
+    h2{ font-size:30px; margin-bottom:22px; }
+    input{ font-size:16px; }   /* evita el zoom automático en iPhone */
+}
+
+@media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+}

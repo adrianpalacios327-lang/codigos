@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudNova — Iniciar sesión</title>
+    <link rel="stylesheet" href="login.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container active" id="login">
+            <img src="image.png" alt="Logo StudNova" width="50" height="50" class="logo">
+            <br>
+            <h2>StudNova</h2>
+            <p id="loginMensaje" class="form-mensaje"></p>
+            <form id="formLogin">
+                <input type="email" id="loginCorreo" placeholder="Correo electrónico" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+                <button type="button" id="btnGoogle" class="google-btn">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20">
+                    Continuar con Google
+                </button>
+            </form>
+            <div class="links">
+                <a href="#" onclick="mostrarFormulario('register'); return false;">Registrarme</a>
+            </div>
+        </div>
+
+        <div class="form-container" id="register">
+            <h2>Registrarme</h2>
+            <p id="registerMensaje" class="form-mensaje error" hidden></p>
+            <form id="formRegister">
+                <input type="text" id="registerNombre" placeholder="Nombre completo" required>
+                <input type="email" id="registerCorreo" placeholder="Correo electrónico" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña" required>
+                <button type="submit">Crear cuenta</button>
+            </form>
+            <div class="links">
+                <a href="#" onclick="mostrarFormulario('login'); return false;">Ya tengo cuenta</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+
+    <script>
+      
+  const GOOGLE_CLIENT_ID = "625376533141-3vug0hb9n3u6kqqk7gmi7g7cf1nfo6ql.apps.googleusercontent.com";
+
+  let tokenClient;
+
+  async function handleGoogleResponse(user) {
+    const mensaje = document.getElementById("loginMensaje");
+    if (mensaje) {
+      mensaje.hidden = false;
+      mensaje.textContent = "Sincronizando cuenta con StudNova...";
+      mensaje.style.color = "#93c5fd";
+    }
+
+    try {
+      const apiUrl = (typeof API_URL !== 'undefined') ? API_URL : ((window.location.port === "8000" || window.location.port === "") ? "" : "http://127.0.0.1:8000");
+      const resBackend = await fetch(`${apiUrl}/usuario/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: user.name,
+          correo: user.email,
+          google_id: user.sub,
+          foto: user.picture
+        })
+      });
+
+      if (!resBackend.ok) {
+        let detalle = "";
+        try { const errJson = await resBackend.json(); detalle = errJson.detail; } catch (e) { detalle = await resBackend.text(); }
+        throw new Error(detalle || "No se pudo registrar la cuenta en el servidor.");
+      }
+
+      const usuarioBD = await resBackend.json();
+
+      // Guardar sesión completa en localStorage con el id_usuario real de PostgreSQL
+      guardarSesion(usuarioBD);
+      localStorage.setItem("id_usuario", usuarioBD.id_usuario);
+      localStorage.setItem("userPhoto", user.picture || "");
+      localStorage.setItem("loginMethod", "google");
+
+      if (mensaje) {
+        mensaje.textContent = "¡Bienvenido " + usuarioBD.nombre + "!";
+        mensaje.style.color = "lightgreen";
+      }
+
+      setTimeout(() => {
+        window.location.href = "/ia/interfaz.html";
+      }, 600);
+
+    } catch (err) {
+      console.error("Error al conectar con el servidor:", err);
+      if (mensaje) {
+        mensaje.hidden = false;
+        mensaje.textContent = "Error al sincronizar: " + err.message;
+        mensaje.style.color = "#E9938A";
+      }
+    }
+  }
+
+  function abrirGoogleAuth() {
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
+      alert("El servicio de Google aún se está conectando. Por favor espera unos segundos e intenta nuevamente.");
+      return;
+    }
+    if (!tokenClient) {
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: "email profile openid",
+        callback: async (tokenResponse) => {
+          if (tokenResponse.error) {
+            console.error("Error al obtener token de Google:", tokenResponse);
+            return;
+          }
+          try {
+            const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+              headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+            });
+            const user = await res.json();
+            handleGoogleResponse(user);
+          } catch (e) {
+            console.error("Error obteniendo datos de usuario Google:", e);
+          }
+        },
+      });
+    }
+    tokenClient.requestAccessToken({ prompt: 'select_account' });
+  }
+
+  const btnGoogle = document.getElementById("btnGoogle");
+  if (btnGoogle) {
+    btnGoogle.addEventListener("click", (e) => {
+      e.preventDefault();
+      abrirGoogleAuth();
+    });
+  }
+</script>
+</body>
+</html>
