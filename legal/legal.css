@@ -1,0 +1,108 @@
+/* ============================================================
+   StudNova — legal.css
+   Estilos de las páginas legales (privacidad y términos).
+   Misma paleta y estilo Apple que la landing.
+   ============================================================ */
+:root{
+  --bg-dark:#0A082D; --primary:#16446A; --secondary:#72AFC1; --accent:#2C6A94;
+  --card:rgba(18,40,72,.78); --border:rgba(114,175,193,.25);
+  --text:#F4F8FC; --text2:#9CB7D1; --coral-soft:#A9D6E0;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter",
+         "Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{color-scheme:dark;scroll-behavior:smooth;scroll-padding-top:84px;}
+
+body{
+  font-family:var(--font);
+  font-size:17px;
+  line-height:1.6;
+  letter-spacing:-0.011em;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  background:linear-gradient(500deg,var(--bg-dark),var(--primary),var(--accent),var(--secondary));
+  background-attachment:fixed;
+  min-height:100vh;
+}
+::selection{background:var(--coral-soft);color:var(--bg-dark);}
+a{color:var(--coral-soft);text-underline-offset:3px;}
+a:hover{color:#fff;}
+a:focus-visible,button:focus-visible{outline:2px solid var(--coral-soft);outline-offset:3px;border-radius:6px;}
+
+/* Barra superior */
+.legal-nav{
+  position:sticky;top:0;z-index:10;
+  background:rgba(10,8,45,.72);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.legal-nav-in{
+  max-width:860px;margin:0 auto;padding:0 24px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.legal-logo{font-size:19px;font-weight:600;letter-spacing:-0.02em;color:var(--text);text-decoration:none;}
+.legal-nav a.volver{
+  font-size:14px;text-decoration:none;color:var(--text);
+  background:rgba(244,248,252,.1);padding:7px 16px;border-radius:980px;
+  transition:background .2s ease;
+}
+.legal-nav a.volver:hover{background:rgba(244,248,252,.18);}
+
+/* Contenido */
+.legal{max-width:860px;margin:0 auto;padding:56px 24px 90px;}
+
+.legal-aviso{
+  background:rgba(245,158,11,.14);
+  border:1px solid rgba(245,158,11,.5);
+  border-radius:18px;padding:16px 20px;margin-bottom:34px;
+  font-size:15px;color:#fde7b0;
+}
+.legal-aviso strong{color:#fff;}
+
+.legal h1{
+  font-size:clamp(34px,6vw,54px);line-height:1.08;
+  letter-spacing:-0.035em;font-weight:700;margin-bottom:10px;
+}
+.legal .meta{color:var(--text2);font-size:15px;margin-bottom:40px;}
+
+.legal section{
+  background:var(--card);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:24px;padding:28px 30px;margin-bottom:18px;
+}
+.legal h2{font-size:22px;letter-spacing:-0.02em;margin-bottom:12px;font-weight:600;}
+.legal h3{font-size:16px;margin:16px 0 6px;color:var(--coral-soft);font-weight:600;}
+.legal p{margin-bottom:12px;color:#dbe7f2;}
+.legal p:last-child{margin-bottom:0;}
+.legal ul{margin:6px 0 12px 22px;color:#dbe7f2;}
+.legal li{margin-bottom:6px;}
+
+/* Campos que debes completar */
+mark.pendiente{
+  background:rgba(245,158,11,.25);color:#ffe6a8;
+  padding:1px 7px;border-radius:6px;font-weight:600;
+}
+
+/* Tabla de cookies / almacenamiento */
+.tabla-scroll{overflow-x:auto;margin:10px 0 4px;border-radius:14px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:620px;}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:top;}
+th{background:rgba(10,8,45,.45);color:var(--coral-soft);font-weight:600;}
+tr:last-child td{border-bottom:none;}
+td code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:#cfe8ee;}
+
+/* Pie */
+.legal-pie{
+  max-width:860px;margin:0 auto;padding:26px 24px 44px;
+  border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;gap:8px 24px;font-size:13px;color:var(--text2);
+}
+.legal-pie a{color:var(--text2);text-decoration:none;}
+.legal-pie a:hover{color:var(--text);text-decoration:underline;}
+
+@media (max-width:560px){
+  .legal{padding:36px 16px 70px;}
+  .legal section{padding:22px 20px;border-radius:20px;}
+}

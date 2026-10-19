@@ -272,3 +272,68 @@ a:focus-visible{
 @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; animation:none !important; }
 }
+
+/* ============================================================
+   ACEPTACIÓN DE TÉRMINOS Y POLÍTICA DE DATOS (consentimiento)
+   ============================================================ */
+.aceptar{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    text-align:left;
+    font-size:13.5px;
+    line-height:1.4;
+    color:var(--text2);
+    cursor:pointer;
+}
+.aceptar[hidden]{ display:none; }
+
+/* casilla redonda y limpia (anula el estilo global de los input) */
+.aceptar input[type="checkbox"]{
+    -webkit-appearance:none;
+    appearance:none;
+    width:22px;
+    height:22px;
+    padding:0;
+    flex-shrink:0;
+    margin-top:1px;
+    border-radius:7px;
+    border:1.5px solid rgba(114,175,193,0.6);
+    background:var(--input);
+    cursor:pointer;
+    transition:background .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.aceptar input[type="checkbox"]:checked{
+    background:var(--secondary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%230A082D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat;
+    border-color:var(--secondary);
+}
+.aceptar a{
+    color:var(--coral-soft);
+    text-underline-offset:3px;
+}
+.aceptar a:hover{ color:var(--text); }
+
+/* si intenta continuar sin aceptar */
+.aceptar.con-error{ color:#E9938A; }
+.aceptar.con-error input[type="checkbox"]{
+    border-color:#E9938A;
+    box-shadow:0 0 0 4px rgba(233,147,138,0.18);
+}
+
+/* enlaces legales al pie de cada tarjeta */
+.login-legal{
+    margin-top:16px;
+    text-align:center;
+    font-size:12.5px;
+    color:var(--text2);
+}
+.login-legal a{
+    color:var(--text2);
+    text-decoration:none;
+    transition:color .2s ease;
+}
+.login-legal a:hover{
+    color:var(--text);
+    text-decoration:underline;
+    text-underline-offset:3px;
+}

@@ -18,6 +18,16 @@
                 <input type="email" id="loginCorreo" placeholder="Correo electrónico" required>
                 <input type="password" id="loginPassword" placeholder="Contraseña" required>
                 <button type="submit">Entrar</button>
+
+                <!-- NUEVO: solo se pide para crear cuenta con Google (se oculta si ya la aceptó antes) -->
+                <label class="aceptar" id="googleAceptaWrap">
+                    <input type="checkbox" id="googleAcepto">
+                    <span>Para continuar con Google acepto los
+                        <a href="/legal/terminos.html" target="_blank" rel="noopener">Términos</a> y la
+                        <a href="/legal/privacidad.html" target="_blank" rel="noopener">Política de tratamiento de datos</a>.
+                        Si soy menor de 18 años, tengo autorización de mi representante legal.</span>
+                </label>
+
                 <button type="button" id="btnGoogle" class="google-btn">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="20">
                     Continuar con Google
@@ -26,6 +36,10 @@
             <div class="links">
                 <a href="#" onclick="mostrarFormulario('register'); return false;">Registrarme</a>
             </div>
+            <p class="login-legal">
+                <a href="/legal/terminos.html" target="_blank" rel="noopener">Términos</a> ·
+                <a href="/legal/privacidad.html" target="_blank" rel="noopener">Privacidad</a>
+            </p>
         </div>
 
         <div class="form-container" id="register">
@@ -35,18 +49,32 @@
                 <input type="text" id="registerNombre" placeholder="Nombre completo" required>
                 <input type="email" id="registerCorreo" placeholder="Correo electrónico" required>
                 <input type="password" id="registerPassword" placeholder="Contraseña" required>
+
+                <!-- NUEVO: consentimiento expreso (no viene marcada de antemano) -->
+                <label class="aceptar" id="registerAceptaWrap">
+                    <input type="checkbox" id="registerAcepto" required>
+                    <span>Acepto los
+                        <a href="/legal/terminos.html" target="_blank" rel="noopener">Términos</a> y la
+                        <a href="/legal/privacidad.html" target="_blank" rel="noopener">Política de tratamiento de datos</a>.
+                        Si soy menor de 18 años, tengo autorización de mi representante legal.</span>
+                </label>
+
                 <button type="submit">Crear cuenta</button>
             </form>
             <div class="links">
                 <a href="#" onclick="mostrarFormulario('login'); return false;">Ya tengo cuenta</a>
             </div>
+            <p class="login-legal">
+                <a href="/legal/terminos.html" target="_blank" rel="noopener">Términos</a> ·
+                <a href="/legal/privacidad.html" target="_blank" rel="noopener">Privacidad</a>
+            </p>
         </div>
     </div>
 
     <script src="login.js"></script>
 
     <script>
-      
+
   const GOOGLE_CLIENT_ID = "625376533141-3vug0hb9n3u6kqqk7gmi7g7cf1nfo6ql.apps.googleusercontent.com";
 
   let tokenClient;
@@ -68,7 +96,10 @@
           nombre: user.name,
           correo: user.email,
           google_id: user.sub,
-          foto: user.picture
+          foto: user.picture,
+          // NUEVO: constancia del consentimiento (el backend la guarda con fecha)
+          acepto_terminos: true,
+          version_politica: VERSION_POLITICA
         })
       });
 
@@ -82,6 +113,7 @@
 
       // Guardar sesión completa en localStorage con el id_usuario real de PostgreSQL
       guardarSesion(usuarioBD);
+      guardarConsentimiento();
       localStorage.setItem("id_usuario", usuarioBD.id_usuario);
       localStorage.setItem("userPhoto", user.picture || "");
       localStorage.setItem("loginMethod", "google");
@@ -106,6 +138,9 @@
   }
 
   function abrirGoogleAuth() {
+    // NUEVO: sin aceptación expresa no se abre Google
+    if (!requerirConsentimientoGoogle()) return;
+
     if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
       alert("El servicio de Google aún se está conectando. Por favor espera unos segundos e intenta nuevamente.");
       return;
@@ -142,5 +177,8 @@
     });
   }
 </script>
+
+    <!-- Aviso de cookies y almacenamiento (una sola vez) -->
+    <script src="/legal/aviso-almacenamiento.js" defer></script>
 </body>
 </html>

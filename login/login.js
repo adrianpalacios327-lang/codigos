@@ -4,6 +4,71 @@ const API_URL = (window.location.protocol === "http:" || window.location.protoco
 const SESSION_KEY = "studnova:session";
 
 // ==========================================
+// CONSENTIMIENTO (términos y política de datos)
+// Cambia VERSION_POLITICA cada vez que modifiques /legal/privacidad.html o
+// /legal/terminos.html: así se vuelve a pedir la aceptación.
+// ==========================================
+const VERSION_POLITICA = "2026-10-17";
+const CLAVE_CONSENTIMIENTO = "studnova:consentimiento";
+
+function consentimientoGuardado() {
+    try {
+        const c = JSON.parse(localStorage.getItem(CLAVE_CONSENTIMIENTO) || "null");
+        return Boolean(c && c.version === VERSION_POLITICA);
+    } catch (error) {
+        return false;
+    }
+}
+
+// Solo es una ayuda de interfaz (para no preguntar de nuevo en este navegador).
+// La constancia oficial es la que guarda el backend con fecha y versión.
+function guardarConsentimiento() {
+    try {
+        localStorage.setItem(CLAVE_CONSENTIMIENTO, JSON.stringify({
+            version: VERSION_POLITICA,
+            fecha: new Date().toISOString()
+        }));
+    } catch (error) {
+        console.warn("No se pudo recordar el consentimiento:", error);
+    }
+}
+
+// Usada por el botón "Continuar con Google" (ver login.html)
+function requerirConsentimientoGoogle() {
+    if (consentimientoGuardado()) return true;
+
+    const casilla = document.getElementById("googleAcepto");
+    const envoltura = document.getElementById("googleAceptaWrap");
+    if (casilla && casilla.checked) return true;
+
+    if (envoltura) envoltura.classList.add("con-error");
+
+    const mensaje = document.getElementById("loginMensaje");
+    if (mensaje) {
+        mensaje.hidden = false;
+        mensaje.className = "form-mensaje error";
+        mensaje.style.color = "#E9938A";
+        mensaje.textContent = "Para continuar con Google debes aceptar los Términos y la Política de tratamiento de datos.";
+    }
+    if (casilla) casilla.focus();
+    return false;
+}
+
+// Si ya aceptó antes en este navegador, no mostramos la casilla de Google
+(function prepararConsentimiento() {
+    const envoltura = document.getElementById("googleAceptaWrap");
+    if (envoltura && consentimientoGuardado()) envoltura.hidden = true;
+
+    [["googleAcepto", "googleAceptaWrap"], ["registerAcepto", "registerAceptaWrap"]].forEach(([idCasilla, idEnvoltura]) => {
+        const casilla = document.getElementById(idCasilla);
+        const caja = document.getElementById(idEnvoltura);
+        if (casilla && caja) {
+            casilla.addEventListener("change", () => caja.classList.remove("con-error"));
+        }
+    });
+})();
+
+// ==========================================
 // GUARDAR SESIÓN
 // ==========================================
 
@@ -139,6 +204,19 @@ document.getElementById("formRegister").addEventListener("submit", async (e) => 
     const correo = document.getElementById("registerCorreo").value.trim().toLowerCase();
     const contraseña = document.getElementById("registerPassword").value;
 
+    // NUEVO: sin aceptación expresa no se crea la cuenta
+    const casillaAcepto = document.getElementById("registerAcepto");
+    if (!casillaAcepto || !casillaAcepto.checked) {
+        const caja = document.getElementById("registerAceptaWrap");
+        if (caja) caja.classList.add("con-error");
+        mensajeRegister.hidden = false;
+        mensajeRegister.className = "form-mensaje error";
+        mensajeRegister.style.color = "#E9938A";
+        mensajeRegister.textContent = "Debes aceptar los Términos y la Política de tratamiento de datos para crear tu cuenta.";
+        if (casillaAcepto) casillaAcepto.focus();
+        return;
+    }
+
     mensajeRegister.hidden = false;
     mensajeRegister.textContent = "Creando cuenta en el servidor...";
     mensajeRegister.className = "form-mensaje";
@@ -153,7 +231,10 @@ document.getElementById("formRegister").addEventListener("submit", async (e) => 
             body: JSON.stringify({
                 nombre: nombre,
                 correo: correo,
-                contraseña: contraseña
+                contraseña: contraseña,
+                // NUEVO: constancia del consentimiento (el backend la guarda con fecha)
+                acepto_terminos: true,
+                version_politica: VERSION_POLITICA
             })
         });
 
@@ -162,6 +243,8 @@ document.getElementById("formRegister").addEventListener("submit", async (e) => 
         if (!respuesta.ok) {
             throw new Error(data.detail || "No se pudo crear la cuenta.");
         }
+
+        guardarConsentimiento();
 
         // Cuenta creada exitosamente en la base de datos PostgreSQL
         mensajeRegister.textContent = "¡Cuenta creada exitosamente! Cambiando a inicio de sesión...";
